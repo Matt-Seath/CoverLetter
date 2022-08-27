@@ -1,4 +1,4 @@
-import string
+import os
 from datetime import datetime
 from fpdf import FPDF
 from dotenv import dotenv_values
@@ -8,15 +8,14 @@ USER_DATA = dotenv_values(".env")
 
 TODAY = datetime.now().strftime("%d %B, %Y")
 
-
 # Pdf Formatting variables (mm)
+FONT = "times"
 FONT_SIZE = 10
 MARGIN = 10
-SPACING = 6
-FONT = "times"
+SPACING = 5
 PAGE_WIDTH = 210
 PAGE_HEIGHT = 297
-TEXT_LENGTH = 170
+TEXT_LENGTH = PAGE_WIDTH - ( MARGIN * 4 )
 
 # Users Personal Information
 FIRST_NAME = USER_DATA["FIRST_NAME"]
@@ -28,27 +27,30 @@ ADDRESS_LINE_2 = USER_DATA["ADDRESS_L2"]
 POSTCODE = USER_DATA["POSTCODE"]
 DOB = USER_DATA["DOB"]
 
+PATH_TO_PROJECT = USER_DATA["PATH_TO_PROJECT"]
+FILE_DESTINATION = USER_DATA["FILE_DESTINATION"]
 
 
-def build_pdf(position, company, bus_addr_l1, bus_addr_l2, recipient_title, recipient_first_name, recipient_last_name, recipient_position):
-
-    #----------------------------------------------------------------------------------------
+def build_pdf(position, company, company_description, company_mission, bus_addr_l1, bus_addr_l2, recipient_title, recipient_first_name, recipient_last_name, recipient_position):
+   
+    # Intitial Page Configuration
 
     pdf = FPDF('P', 'mm', 'A4')          
     pdf.set_font(FONT, "", FONT_SIZE)
-    pdf.add_page()                                  # Initial Page Settings
+    pdf.add_page()                                  
     pdf.cell(0, 8, "", ln=True)
 
     #----------------------------------------------------------------------------------------
+    # Header
 
     pdf.cell(180, SPACING, MOBILE, align="R", ln=True)
 
     pdf.cell(MARGIN)
     pdf.set_text_color(12, 140, 204)                      
-    pdf.set_font(FONT, "B", FONT_SIZE + 20)
+    pdf.set_font(FONT, "B", FONT_SIZE + 10)
     pdf.cell(h=0,txt=FIRST_NAME)
     pdf.set_text_color(0, 0, 0)                                
-    pdf.cell(h=0, txt=LAST_NAME, ln=True)                            # Header
+    pdf.cell(h=0, txt=LAST_NAME, ln=True)                            
     pdf.set_text_color(0,0,0)
 
     pdf.set_font(FONT, "", FONT_SIZE)
@@ -57,15 +59,17 @@ def build_pdf(position, company, bus_addr_l1, bus_addr_l2, recipient_title, reci
     pdf.set_text_color(12, 140, 204)
     pdf.cell(180, SPACING, EMAIL, align="R", ln=True)
     pdf.set_text_color(0, 0, 0)
-    pdf.line(21, 46, PAGE_WIDTH - 21, 48)
+    pdf.line(21, 46, PAGE_WIDTH - 21, 46)
 
     #------------------------------------------------------------------------------------------
+    # Date
 
     pdf.cell(0, 15, "", ln=True)
-    pdf.cell(MARGIN)                                                                          # Date
+    pdf.cell(MARGIN)                                                                          
     pdf.cell(TEXT_LENGTH, 20, TODAY, ln=True)
     
     #------------------------------------------------------------------------------------------
+    # Recipient/Company Name, address
 
     pdf.cell(MARGIN)
     if recipient_last_name and recipient_title:
@@ -77,43 +81,78 @@ def build_pdf(position, company, bus_addr_l1, bus_addr_l2, recipient_title, reci
     pdf.cell(TEXT_LENGTH, SPACING, company, ln=True)
 
     pdf.cell(MARGIN)
-    pdf.cell(TEXT_LENGTH, SPACING, bus_addr_l1, ln=True)               # Recipient/Company Name, address
+    pdf.cell(TEXT_LENGTH, SPACING, bus_addr_l1, ln=True)              
 
     pdf.cell(MARGIN)
     pdf.cell(TEXT_LENGTH, SPACING, bus_addr_l2, ln=True)
 
     #------------------------------------------------------------------------------------------
+    # Title / Subject
 
     pdf.cell(MARGIN)
     pdf.cell(TEXT_LENGTH, 25, f"RE: Expression of interest for { position } position", ln=True)
 
-    pdf.cell(MARGIN)                                                                # Title / Subject
+    pdf.cell(MARGIN)                                                               
     if recipient_title and recipient_last_name:
         pdf.cell(TEXT_LENGTH, SPACING, f"Dear {recipient_title} {recipient_last_name},", ln=True)
     else:
         pdf.cell(TEXT_LENGTH, SPACING, "Dear Hiring Manager,", ln=True)
+    pdf.cell(0, SPACING, "", ln=True)
 
     #------------------------------------------------------------------------------------------
+    # Body
+
+    pdf.cell(MARGIN)                                                                         
+    pdf.multi_cell(TEXT_LENGTH, SPACING, f"""I'm excited to be applying for the {position} position at {company}. When it comes to software development, there is always room to grow and discover new things. Designing programs that helps make tasks and goals easier to achieve is something I'm passionate about, and I am delighted by the opportunity to apply my knowledge at {company}, {company_description}.""")
 
     pdf.cell(0, SPACING, "", ln=True)
-    pdf.cell(MARGIN)                                                                            # Body
-    pdf.multi_cell(TEXT_LENGTH, SPACING, f"""I'm excited to be applying for the {position} position at {company}. When it comes to software development, there is always room to grow and discover new things. Designing programs that help make tasks and goals easier to achieve is something I'm passionate about.""")
+    pdf.cell(MARGIN)
+    pdf.multi_cell(TEXT_LENGTH, SPACING, f"""I had taken an interest in Programming from a young age, where I would frequenty write scripts to automate the boring and repetitive tasks from my computer. I enjoy using my strong problem-solving skills to overcome challenges, and programming gives me the opportunity to constantly challenge myself and improve my skills as a developer.""")
+
+    pdf.cell(0, SPACING, "", ln=True)
+    pdf.cell(MARGIN)
+    pdf.multi_cell(TEXT_LENGTH, SPACING, f"""Today, I'm a self-motivated and energetic back-end developer with a focus on automating tasks and maintaining servers for web applications. I specialise in Python and have experience working with both Django and Flask frameworks. I'm a fast-learner and a lover of data, knowledgeable in a wide-array of other software and technologies including C, Kotlin, Android SDK and JavaScript.""")
+    
+    pdf.cell(0, SPACING, "", ln=True)
+    pdf.cell(MARGIN)
+    pdf.multi_cell(TEXT_LENGTH, SPACING, f"""Thank you for your time and consideration. I'm looking forward to learning more about the {position} position and about {company}. As a software Developer, my goal is to continually increase my programming skills in order to present better solutions to my employers and their clients. I enjoy uncovering new ideas and would use them to advance {company}'s mission to {company_mission}.""")
 
     #------------------------------------------------------------------------------------------
+    #Sign
 
-    pdf.output("CoverLetter.pdf")
-    return 0
+    pdf.cell(0, SPACING, "", ln=True)
+    pdf.cell(MARGIN)
+    pdf.multi_cell(TEXT_LENGTH, SPACING, f"""Sincerely,""")                            
+
+    pdf.cell(0, SPACING, "", ln=True)
+    pdf.cell(MARGIN)
+    pdf.multi_cell(TEXT_LENGTH, SPACING, f"""{FIRST_NAME} {LAST_NAME}""")
+
+    #------------------------------------------------------------------------------------------
+    # Return pdf object
+
+    return pdf
+
+
+def save_pdf(pdf, company):
+    filename = f"CoverLetter: {company}.pdf"
+    pdf.output(filename)
+
+
 
 def main():
+    os.system('cls' if os.name == 'nt' else 'clear')
     company = input("Company Name:  ").strip().title()
+    company_description = input("Company Description: e.g. (A leader of cloud storage in Australia):  ").strip()
+    company_mission = input("Companys Mission e.g. (deliver viable solutions for digital storage):  ").strip()
     business_address_l1 = input("Business Address, Line 1:  ").strip().title()
     business_address_l2 = input("Business Address, Line 2:  ").strip().title()
     position = input("Job Position:  ").strip().title()
     while True:
-        recipient_exists = input("Add Recipient? (y)=YES, (n)=NO:  ").strip()
-        if recipient_exists.lower() == "y":
+        recipient_exists = input("Add Recipient? (y)=YES, (n)=NO:  ").strip().lower()
+        if recipient_exists == "y":
             while True:
-                ans = input("Recipients Title (mr, mrs, ms, dr):  ").strip()
+                ans = input("Recipients Title (mr, mrs, ms, dr):  ").strip().lower()
                 if ans == "mr" or ans == "mrs" or ans == "ms" or ans == "dr":
                     recipient_title = ans.title() + "."
                     break
@@ -121,11 +160,12 @@ def main():
             recipient_last_name = input("Last name of Recipient:  ").strip().title()
             recipient_position = input("Position of Recipient:  ").strip().title()
             break
-        if recipient_exists.lower() == "n":
+        if recipient_exists == "n":
             recipient_title = recipient_first_name = recipient_last_name = recipient_position = None
             break
 
-    build_pdf(position, company, business_address_l1, business_address_l2, recipient_title, recipient_first_name, recipient_last_name, recipient_position)
+    pdf = build_pdf(position, company, company_description, company_mission, business_address_l1, business_address_l2, recipient_title, recipient_first_name, recipient_last_name, recipient_position)
+    save_pdf(pdf, company)
 
 if __name__ == "__main__":
     main()
