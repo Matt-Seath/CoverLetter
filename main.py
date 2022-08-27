@@ -1,4 +1,7 @@
+from distutils.log import error
+from msilib.schema import Error
 import os
+import shutil
 from datetime import datetime
 from fpdf import FPDF
 from dotenv import dotenv_values
@@ -135,9 +138,16 @@ def build_pdf(position, company, company_description, company_mission, bus_addr_
 
 
 def save_pdf(pdf, company):
-    filename = f"CoverLetter: {company}.pdf"
-    pdf.output(filename)
-
+    
+    pdf.output(f"CoverLetter ({company}).pdf")
+    try:
+        file_path = os.path.join(PATH_TO_PROJECT, f"CoverLetter ({company}).pdf")
+        destination_path = os.path.join(FILE_DESTINATION, f"CoverLetter ({company}).pdf")
+        shutil.move(file_path, destination_path)
+    except Error:
+        print(error)
+        return 1
+    return 0
 
 
 def main():
@@ -166,6 +176,7 @@ def main():
 
     pdf = build_pdf(position, company, company_description, company_mission, business_address_l1, business_address_l2, recipient_title, recipient_first_name, recipient_last_name, recipient_position)
     save_pdf(pdf, company)
+    return 0
 
 if __name__ == "__main__":
     main()
