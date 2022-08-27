@@ -110,7 +110,7 @@ def build_pdf(position, company, company_description, company_mission, bus_addr_
 
     pdf.cell(0, SPACING, "", ln=True)
     pdf.cell(MARGIN)
-    pdf.multi_cell(TEXT_LENGTH, SPACING, f"""I had taken an interest in Programming from a young age, where I would frequenty write scripts to automate the boring and repetitive tasks from my computer. I enjoy using my strong problem-solving skills to overcome challenges, and programming gives me the opportunity to constantly challenge myself and improve my skills as a developer.""")
+    pdf.multi_cell(TEXT_LENGTH, SPACING, f"""I had taken an interest in Programming from a young age, where I would frequently write scripts to automate boring and repetitive tasks from my computer. I enjoy using my strong problem-solving skills to overcome challenges, and programming gives me the opportunity to constantly challenge myself and improve my skills as a developer.""")
 
     pdf.cell(0, SPACING, "", ln=True)
     pdf.cell(MARGIN)
@@ -145,7 +145,7 @@ def save_pdf(pdf, company):
         destination_path = os.path.join(FILE_DESTINATION, f"CoverLetter ({company}).pdf")
         shutil.move(file_path, destination_path)
     except Error:
-        print(error)
+        print(Error)
         return 1
     return 0
 
