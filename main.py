@@ -12,8 +12,9 @@ USER_DATA = dotenv_values(".env")
 TODAY = datetime.now().strftime("%d %B, %Y")
 
 # Pdf Formatting variables (mm)
-FONT = "times"
-FONT_SIZE = 10
+FONT = "Garamond Regular"
+FONT_2 = "Garamond-Bold"
+FONT_SIZE = 12
 MARGIN = 10
 SPACING = 5
 PAGE_WIDTH = 210
@@ -36,58 +37,48 @@ FILE_DESTINATION = USER_DATA["FILE_DESTINATION"]
 
 def build_pdf(position, company, company_description, company_mission, bus_addr_l1, bus_addr_l2, recipient_title, recipient_first_name, recipient_last_name, recipient_position):
    
-    # Intitial Page Configuration
-
-    pdf = FPDF('P', 'mm', 'A4')          
-    pdf.set_font(FONT, "", FONT_SIZE)
+    # Intitial Page Configuration 
+    pdf = FPDF('P', 'mm', 'A4')      
+    pdf.add_font(FONT, "", "C:\\Users\\Matt\\Projects\\Python\\CoverLetter\\Garamond Regular.ttf")
+    pdf.add_font(FONT_2, "", "C:\\Users\\Matt\\Projects\\Python\\CoverLetter\\Garamond Bold.ttf")
+    pdf.set_font(FONT_2, "", FONT_SIZE + 10)
     pdf.add_page()                                  
-    pdf.cell(0, 8, "", ln=True)
+    pdf.cell(0, MARGIN * 2, "", ln=True)
 
     #----------------------------------------------------------------------------------------
     # Header
 
-    pdf.cell(180, SPACING, MOBILE, align="R", ln=True)
-
     pdf.cell(MARGIN)
-    pdf.set_text_color(12, 140, 204)                      
-    pdf.set_font(FONT, "B", FONT_SIZE + 10)
-    pdf.cell(h=0,txt=FIRST_NAME)
-    pdf.set_text_color(0, 0, 0)                                
-    pdf.cell(h=0, txt=LAST_NAME, ln=True)                            
-    pdf.set_text_color(0,0,0)
-
+    pdf.cell(h=0,txt=FIRST_NAME.upper())
+    pdf.cell(h=0, txt=LAST_NAME.upper(), ln=True)                            
+    
     pdf.set_font(FONT, "", FONT_SIZE)
-    pdf.cell(180, SPACING, ADDRESS_LINE_1, align="R", ln=True)
-    pdf.cell(180, SPACING, f"{ADDRESS_LINE_2} {POSTCODE}", align="R", ln=True)
-    pdf.set_text_color(12, 140, 204)
-    pdf.cell(180, SPACING, EMAIL, align="R", ln=True)
-    pdf.set_text_color(0, 0, 0)
-    pdf.line(21, 46, PAGE_WIDTH - 21, 46)
+    pdf.cell(180, SPACING, f"{ADDRESS_LINE_1.title()}, {ADDRESS_LINE_2} {POSTCODE}  |", align="R", ln=True)
+    pdf.cell(180, SPACING, MOBILE + "  |", align="R", ln=True)
+    pdf.cell(180, SPACING, EMAIL + "  |", align="R", ln=True)
 
     #------------------------------------------------------------------------------------------
     # Date
 
-    pdf.cell(0, 15, "", ln=True)
+    pdf.cell(0, SPACING, "", ln=True)
     pdf.cell(MARGIN)                                                                          
-    pdf.cell(TEXT_LENGTH, 20, TODAY, ln=True)
+    pdf.cell(TEXT_LENGTH, 20, "    " + TODAY, ln=True)
     
     #------------------------------------------------------------------------------------------
     # Recipient/Company Name, address
 
     pdf.cell(MARGIN)
     if recipient_last_name and recipient_title:
-        pdf.set_font(FONT, "B", FONT_SIZE)
-        pdf.cell(TEXT_LENGTH, SPACING, f"{recipient_title} {recipient_first_name} {recipient_last_name}, {recipient_position}", ln=True)
-        pdf.set_font(FONT, "", FONT_SIZE)     
+        pdf.cell(TEXT_LENGTH, SPACING, f"    {recipient_title} {recipient_first_name} {recipient_last_name}, {recipient_position}", ln=True)
         pdf.cell(MARGIN)
 
-    pdf.cell(TEXT_LENGTH, SPACING, company, ln=True)
+    pdf.cell(TEXT_LENGTH, SPACING, "    " + company, ln=True)
 
     pdf.cell(MARGIN)
-    pdf.cell(TEXT_LENGTH, SPACING, bus_addr_l1, ln=True)              
+    pdf.cell(TEXT_LENGTH, SPACING, "    " + bus_addr_l1, ln=True)              
 
     pdf.cell(MARGIN)
-    pdf.cell(TEXT_LENGTH, SPACING, bus_addr_l2, ln=True)
+    pdf.cell(TEXT_LENGTH, SPACING, "    " + bus_addr_l2, ln=True)
 
     #------------------------------------------------------------------------------------------
     # Title / Subject
@@ -129,7 +120,7 @@ def build_pdf(position, company, company_description, company_mission, bus_addr_
 
     pdf.cell(0, SPACING, "", ln=True)
     pdf.cell(MARGIN)
-    pdf.multi_cell(TEXT_LENGTH, SPACING, f"""{FIRST_NAME} {LAST_NAME}""")
+    pdf.multi_cell(TEXT_LENGTH, SPACING, f"""{FIRST_NAME.title()} {LAST_NAME.title()}""")
 
     #------------------------------------------------------------------------------------------
     # Return pdf object
