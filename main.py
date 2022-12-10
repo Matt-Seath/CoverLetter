@@ -1,5 +1,3 @@
-from distutils.log import error
-from msilib.schema import Error
 import os
 import shutil
 from datetime import datetime
@@ -12,8 +10,8 @@ USER_DATA = dotenv_values(".env")
 TODAY = datetime.now().strftime("%d %B, %Y")
 
 # Pdf Formatting variables (mm)
-FONT = "Garamond Regular"
-FONT_2 = "Garamond-Bold"
+FONT = "EBGaramond"
+FONT_2 = "EBGaramond bold"
 FONT_SIZE = 12
 MARGIN = 10
 SPACING = 5
@@ -39,8 +37,8 @@ def build_pdf(position, company, company_description, company_mission, bus_addr_
    
     # Intitial Page Configuration 
     pdf = FPDF('P', 'mm', 'A4')      
-    pdf.add_font(FONT, "", "C:\\Users\\Matt\\Projects\\Python\\CoverLetter\\Garamond Regular.ttf")
-    pdf.add_font(FONT_2, "", "C:\\Users\\Matt\\Projects\\Python\\CoverLetter\\Garamond Bold.ttf")
+    pdf.add_font(FONT, "", PATH_TO_PROJECT + "EBGaramond.ttf")
+    pdf.add_font(FONT_2, "", PATH_TO_PROJECT + "EBGaramond_bold.ttf")
     pdf.set_font(FONT_2, "", FONT_SIZE + 10)
     pdf.add_page()                                  
     pdf.cell(0, MARGIN * 2, "", ln=True)
@@ -97,7 +95,7 @@ def build_pdf(position, company, company_description, company_mission, bus_addr_
     # Body
 
     pdf.cell(MARGIN)                                                                         
-    pdf.multi_cell(TEXT_LENGTH, SPACING, f"""I'm excited to be applying for the {position} position at {company}. When it comes to software development, there is always room to grow and discover new things. Designing programs that helps make tasks and goals easier to achieve is something I'm passionate about, and I am delighted by the opportunity to apply my knowledge at {company}, {company_description}.""")
+    pdf.multi_cell(TEXT_LENGTH, SPACING, f"""I'm excited to be applying for the {position} position at {company}. I'm passionate about, and I am delighted by the opportunity to apply my knowledge at {company}, {company_description}.""")
 
     pdf.cell(0, SPACING, "", ln=True)
     pdf.cell(MARGIN)
