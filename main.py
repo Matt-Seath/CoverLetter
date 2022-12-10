@@ -4,7 +4,7 @@ from datetime import datetime
 from fpdf import FPDF
 from dotenv import dotenv_values
 
-from text import SoftwareDev, DataScience
+from .templates import SoftwareDev, DataScience
 
 
 # Get Personal Data from .env file in root directory
@@ -167,7 +167,7 @@ def main():
     business_address_l2 = input("Business Address, Line 2:  ").strip().title()
     position = input("Job Position:  ").strip().title()
     while True:
-        field = input("Industry Field:  (data, dev)").strip().lower()
+        field = input("Industry Field (data, dev):  ").strip().lower()
         if field == "data":
             body = DataScience()
             break
