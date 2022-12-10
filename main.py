@@ -4,6 +4,9 @@ from datetime import datetime
 from fpdf import FPDF
 from dotenv import dotenv_values
 
+from text import SoftwareDev, DataScience
+
+
 # Get Personal Data from .env file in root directory
 USER_DATA = dotenv_values(".env")
 
@@ -33,7 +36,7 @@ PATH_TO_PROJECT = USER_DATA["PATH_TO_PROJECT"]
 FILE_DESTINATION = USER_DATA["FILE_DESTINATION"]
 
 
-def build_pdf(field, position, company, company_description, company_mission, bus_addr_l1, bus_addr_l2, 
+def build_pdf(body, position, company, company_description, company_mission, bus_addr_l1, bus_addr_l2, 
     recipient_title, recipient_first_name, recipient_last_name, recipient_position):
    
     # Intitial Page Configuration 
@@ -68,7 +71,8 @@ def build_pdf(field, position, company, company_description, company_mission, bu
 
     pdf.cell(MARGIN)
     if recipient_last_name and recipient_title:
-        pdf.cell(TEXT_LENGTH, SPACING, f"    {recipient_title} {recipient_first_name} {recipient_last_name}, {recipient_position}", ln=True)
+        pdf.cell(TEXT_LENGTH, SPACING, f"    {recipient_title} {recipient_first_name} \
+{recipient_last_name}, {recipient_position}", ln=True)
         pdf.cell(MARGIN)
 
     pdf.cell(TEXT_LENGTH, SPACING, "    " + company, ln=True)
@@ -97,32 +101,31 @@ def build_pdf(field, position, company, company_description, company_mission, bu
 
     pdf.cell(MARGIN)                                                                         
     pdf.multi_cell(TEXT_LENGTH, SPACING, 
-        f"""I am excited to be applying for the {position} position at {company}. \
-            I'm a passionate about {field}, and I am delighted by the opportunity to apply my knowledge at {company}, {company_description}."""
+        f"""I am writing to apply for the {position} job opening advertised by {company}. \
+I'm passionate about {body.field}, and I am delighted by the opportunity to apply my \
+knowledge at {company}, {company_description}."""
     )
 
     pdf.cell(0, SPACING, "", ln=True)
     pdf.cell(MARGIN)
-    pdf.multi_cell(TEXT_LENGTH, SPACING, 
-        f"""I had taken an interest in Programming from a young age, where I would frequently write scripts to automate boring and repetitive \
-            tasks from my computer. I enjoy using my strong problem-solving skills to overcome challenges, and programming gives me the \
-            opportunity to constantly challenge myself and improve my skills as a developer."""
-    )
+    pdf.multi_cell(TEXT_LENGTH, SPACING, body.p2)
 
     pdf.cell(0, SPACING, "", ln=True)
     pdf.cell(MARGIN)
-    pdf.multi_cell(TEXT_LENGTH, SPACING, 
-        f"""Today, I'm a self-motivated and energetic back-end developer with a focus on automating tasks and maintaining servers for web \
-            applications. I specialise in Python and have experience working with both Django and Flask frameworks. I'm a fast-learner and a \
-            lover of data, knowledgeable in a wide-array of other software and technologies including C, Kotlin, Android SDK and JavaScript."""
-    )
+    pdf.multi_cell(TEXT_LENGTH, SPACING, body.p3)
+
+    pdf.cell(0, SPACING, "", ln=True)
+    pdf.cell(MARGIN)
+    pdf.multi_cell(TEXT_LENGTH, SPACING, body.p4)
     
     pdf.cell(0, SPACING, "", ln=True)
     pdf.cell(MARGIN)
     pdf.multi_cell(TEXT_LENGTH, SPACING, 
-        f"""Thank you for your time and consideration. I'm looking forward to learning more about the {position} position and about {company}. \
-            As a software Developer, my goal is to continually increase my programming skills in order to present better solutions to my \
-            employers and their clients. I enjoy uncovering new ideas and would use them to advance {company}'s mission to {company_mission}."""
+        f"""Thank you for your time and consideration. I'm looking forward to learning more about \
+the {position} position and about {company}. As a software Developer, my goal is to continually \
+increase my programming skills in order to present better solutions to my employers and their \
+clients. I enjoy uncovering new ideas and would use them to advance {company}'s mission to \
+{company_mission}."""
     )
 
     #------------------------------------------------------------------------------------------
@@ -163,7 +166,14 @@ def main():
     business_address_l1 = input("Business Address, Line 1:  ").strip().title()
     business_address_l2 = input("Business Address, Line 2:  ").strip().title()
     position = input("Job Position:  ").strip().title()
-    field = input("Industry Field:  ")
+    while True:
+        field = input("Industry Field:  (data, dev)").strip().lower()
+        if field == "data":
+            body = DataScience()
+            break
+        if field == "dev":
+            body = SoftwareDev()
+            break
     while True:
         recipient_exists = input("Add Recipient? (y)=YES, (n)=NO:  ").strip().lower()
         if recipient_exists == "y":
@@ -181,7 +191,7 @@ def main():
             break
 
     pdf = build_pdf(
-        field, position, company, company_description, company_mission, business_address_l1, business_address_l2, 
+        body, position, company, company_description, company_mission, business_address_l1, business_address_l2, 
         recipient_title, recipient_first_name, recipient_last_name, recipient_position)
     save_pdf(pdf, company)
     return 0
