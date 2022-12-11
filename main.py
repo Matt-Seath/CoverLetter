@@ -146,7 +146,7 @@ def build_pdf(template, data):
 
 def save_pdf(pdf, company):
     
-    filename = f"""{FIRST_NAME.title()} {LAST_NAME.title()} ({company}, {FILEDATE}).pdf"""
+    filename = f"""{FIRST_NAME.title()} {LAST_NAME.title()} cover letter ({company}, {FILEDATE}).pdf"""
     pdf.output(filename)
     try:
         file_path = os.path.join(PATH_TO_PROJECT, filename)
@@ -155,7 +155,7 @@ def save_pdf(pdf, company):
     except:
         print("Error")
         return 1
-    return 0
+    return filename
 
 
 def main():
@@ -194,9 +194,11 @@ def main():
                 = data["recipient_last_name"] = data["recipient_position"] = None
             break
     
-    print(data)
     pdf = build_pdf(template, data)
-    save_pdf(pdf, data["company"])
+    filename = save_pdf(pdf, data["company"])
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print(f"""PDF Successfully created! "{filename}" can be found at: "{FILE_DESTINATION}".""")
+    print("")
     return 0
 
 if __name__ == "__main__":
