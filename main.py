@@ -41,8 +41,8 @@ def build_pdf(template, data):
    
     # Intitial Page Configuration 
     pdf = FPDF('P', 'mm', 'A4')      
-    pdf.add_font(FONT, "", PATH_TO_PROJECT + "EBGaramond.ttf")
-    pdf.add_font(FONT_2, "", PATH_TO_PROJECT + "EBGaramond_bold.ttf")
+    pdf.add_font(FONT, "", PATH_TO_PROJECT + "fonts//EBGaramond.ttf")
+    pdf.add_font(FONT_2, "", PATH_TO_PROJECT + "fonts//EBGaramond_bold.ttf")
     pdf.set_font(FONT_2, "", FONT_SIZE + 10)
     pdf.add_page()                                  
     pdf.cell(0, MARGIN * 2, "", ln=True)
