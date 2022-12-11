@@ -11,6 +11,7 @@ from templates import *
 USER_DATA = dotenv_values(".env")
 
 TODAY = datetime.now().strftime("%d %B, %Y")
+FILEDATE = datetime.now().strftime("%d-%m-%y")
 
 # Pdf Formatting variables (mm)
 FONT = "EBGaramond"
@@ -145,10 +146,11 @@ def build_pdf(template, data):
 
 def save_pdf(pdf, company):
     
-    pdf.output(f"CoverLetter ({company}).pdf")
+    filename = f"""{FIRST_NAME.title()} {LAST_NAME.title()} ({company}, {FILEDATE}).pdf"""
+    pdf.output(filename)
     try:
-        file_path = os.path.join(PATH_TO_PROJECT, f"CoverLetter ({company}).pdf")
-        destination_path = os.path.join(FILE_DESTINATION, f"CoverLetter ({company}).pdf")
+        file_path = os.path.join(PATH_TO_PROJECT, filename)
+        destination_path = os.path.join(FILE_DESTINATION, filename)
         shutil.move(file_path, destination_path)
     except:
         print("Error")
