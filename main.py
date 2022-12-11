@@ -4,7 +4,7 @@ from datetime import datetime
 from fpdf import FPDF
 from dotenv import dotenv_values
 
-from .templates import SoftwareDev, DataScience
+from templates import *
 
 
 # Get Personal Data from .env file in root directory
@@ -36,8 +36,7 @@ PATH_TO_PROJECT = USER_DATA["PATH_TO_PROJECT"]
 FILE_DESTINATION = USER_DATA["FILE_DESTINATION"]
 
 
-def build_pdf(body, position, company, company_description, company_mission, bus_addr_l1, bus_addr_l2, 
-    recipient_title, recipient_first_name, recipient_last_name, recipient_position):
+def build_pdf(template, data):
    
     # Intitial Page Configuration 
     pdf = FPDF('P', 'mm', 'A4')      
@@ -55,7 +54,8 @@ def build_pdf(body, position, company, company_description, company_mission, bus
     pdf.cell(h=0, txt=LAST_NAME.upper(), ln=True)                            
     
     pdf.set_font(FONT, "", FONT_SIZE)
-    pdf.cell(180, SPACING, f"{ADDRESS_LINE_1.title()}, {ADDRESS_LINE_2} {POSTCODE}  |", align="R", ln=True)
+    pdf.cell(180, SPACING, 
+        f"{ADDRESS_LINE_1.title()}, {ADDRESS_LINE_2} {POSTCODE}  |", align="R", ln=True)
     pdf.cell(180, SPACING, MOBILE + "  |", align="R", ln=True)
     pdf.cell(180, SPACING, EMAIL + "  |", align="R", ln=True)
 
@@ -70,28 +70,32 @@ def build_pdf(body, position, company, company_description, company_mission, bus
     # Recipient/Company Name, address
 
     pdf.cell(MARGIN)
-    if recipient_last_name and recipient_title:
-        pdf.cell(TEXT_LENGTH, SPACING, f"    {recipient_title} {recipient_first_name} \
-{recipient_last_name}, {recipient_position}", ln=True)
+    if data["recipient_last_name"] and data["recipient_title"]:
+        pdf.cell(TEXT_LENGTH, SPACING, f"""    \
+{data["recipient_title"]} {data["recipient_first_name"]} \
+{data["recipient_last_name"]}, {data["recipient_position"]}""", ln=True)
+
         pdf.cell(MARGIN)
 
-    pdf.cell(TEXT_LENGTH, SPACING, "    " + company, ln=True)
+    pdf.cell(TEXT_LENGTH, SPACING, "    " + data["company"], ln=True)
 
     pdf.cell(MARGIN)
-    pdf.cell(TEXT_LENGTH, SPACING, "    " + bus_addr_l1, ln=True)              
+    pdf.cell(TEXT_LENGTH, SPACING, "    " + data["business_address_l1"], ln=True)              
 
     pdf.cell(MARGIN)
-    pdf.cell(TEXT_LENGTH, SPACING, "    " + bus_addr_l2, ln=True)
+    pdf.cell(TEXT_LENGTH, SPACING, "    " + data["business_address_l2"], ln=True)
 
     #------------------------------------------------------------------------------------------
     # Title / Subject
 
     pdf.cell(MARGIN)
-    pdf.cell(TEXT_LENGTH, 25, f"RE: Expression of interest for { position } position", ln=True)
+    pdf.cell(TEXT_LENGTH, 25, 
+        f"""RE: Expression of interest for { data["position"] } position""", ln=True)
 
     pdf.cell(MARGIN)                                                               
-    if recipient_title and recipient_last_name:
-        pdf.cell(TEXT_LENGTH, SPACING, f"Dear {recipient_title} {recipient_last_name},", ln=True)
+    if data["recipient_title"] and data["recipient_last_name"]:
+        pdf.cell(TEXT_LENGTH, SPACING, 
+            f"""Dear {data["recipient_title"]} {data["recipient_last_name"]},""", ln=True)
     else:
         pdf.cell(TEXT_LENGTH, SPACING, "Dear Hiring Manager,", ln=True)
     pdf.cell(0, SPACING, "", ln=True)
@@ -100,33 +104,27 @@ def build_pdf(body, position, company, company_description, company_mission, bus
     # Body
 
     pdf.cell(MARGIN)                                                                         
-    pdf.multi_cell(TEXT_LENGTH, SPACING, 
-        f"""I am writing to apply for the {position} job opening advertised by {company}. \
-I'm passionate about {body.field}, and I am delighted by the opportunity to apply my \
-knowledge at {company}, {company_description}."""
-    )
+    pdf.multi_cell(TEXT_LENGTH, SPACING, template.p1(data))
 
     pdf.cell(0, SPACING, "", ln=True)
     pdf.cell(MARGIN)
-    pdf.multi_cell(TEXT_LENGTH, SPACING, body.p2)
+    pdf.multi_cell(TEXT_LENGTH, SPACING, template.p2(data))
 
     pdf.cell(0, SPACING, "", ln=True)
     pdf.cell(MARGIN)
-    pdf.multi_cell(TEXT_LENGTH, SPACING, body.p3)
+    pdf.multi_cell(TEXT_LENGTH, SPACING, template.p3(data))
 
     pdf.cell(0, SPACING, "", ln=True)
     pdf.cell(MARGIN)
-    pdf.multi_cell(TEXT_LENGTH, SPACING, body.p4)
+    pdf.multi_cell(TEXT_LENGTH, SPACING, template.p4(data))
     
     pdf.cell(0, SPACING, "", ln=True)
     pdf.cell(MARGIN)
-    pdf.multi_cell(TEXT_LENGTH, SPACING, 
-        f"""Thank you for your time and consideration. I'm looking forward to learning more about \
-the {position} position and about {company}. As a software Developer, my goal is to continually \
-increase my programming skills in order to present better solutions to my employers and their \
-clients. I enjoy uncovering new ideas and would use them to advance {company}'s mission to \
-{company_mission}."""
-    )
+    pdf.multi_cell(TEXT_LENGTH, SPACING, template.p5(data))
+
+    pdf.cell(0, SPACING, "", ln=True)
+    pdf.cell(MARGIN)
+    pdf.multi_cell(TEXT_LENGTH, SPACING, template.p6(data))
 
     #------------------------------------------------------------------------------------------
     #Sign
@@ -159,20 +157,23 @@ def save_pdf(pdf, company):
 
 
 def main():
+    data = {}
     os.system('cls' if os.name == 'nt' else 'clear')
-    company = input("Company Name:  ").strip().title()
-    company_description = input("Company Description: e.g. (A leader of cloud storage in Australia):  ").strip()
-    company_mission = input("Companys Mission e.g. (deliver viable solutions for digital storage):  ").strip()
-    business_address_l1 = input("Business Address, Line 1:  ").strip().title()
-    business_address_l2 = input("Business Address, Line 2:  ").strip().title()
-    position = input("Job Position:  ").strip().title()
+    data["company"] = input("Company Name:  ").strip().title()
+    data["company_description"] = \
+        input("Company Description: e.g. (A leader of cloud storage in Australia):  ").strip()
+    data["company_mission"] = \
+        input("Companys Mission e.g. (deliver viable solutions for digital storage):  ").strip()
+    data["business_address_l1"] = input("Business Address, Line 1:  ").strip().title()
+    data["business_address_l2"] = input("Business Address, Line 2:  ").strip().title()
+    data["position"] = input("Job Position:  ").strip().title()
     while True:
-        field = input("Industry Field (data, dev):  ").strip().lower()
-        if field == "data":
-            body = DataScience()
+        data["field"] = input("Industry Field (data, dev):  ").strip().lower()
+        if data["field"] == "data":
+            template = DataScience()
             break
-        if field == "dev":
-            body = SoftwareDev()
+        if data["field"] == "dev":
+            template = SoftwareDev()
             break
     while True:
         recipient_exists = input("Add Recipient? (y)=YES, (n)=NO:  ").strip().lower()
@@ -180,20 +181,20 @@ def main():
             while True:
                 ans = input("Recipients Title (mr, mrs, ms, dr):  ").strip().lower()
                 if ans == "mr" or ans == "mrs" or ans == "ms" or ans == "dr":
-                    recipient_title = ans.title() + "."
+                    data["recipient_title"] = ans.title() + "."
                     break
-            recipient_first_name = input("First name of Recipient:  ").strip().title()
-            recipient_last_name = input("Last name of Recipient:  ").strip().title()
-            recipient_position = input("Position of Recipient:  ").strip().title()
+            data["recipient_first_name"] = input("First name of Recipient:  ").strip().title()
+            data["recipient_last_name"] = input("Last name of Recipient:  ").strip().title()
+            data["recipient_position"] = input("Position of Recipient:  ").strip().title()
             break
         if recipient_exists == "n":
-            recipient_title = recipient_first_name = recipient_last_name = recipient_position = None
+            data["recipient_title"] = data["recipient_first_name"] \
+                = data["recipient_last_name"] = data["recipient_position"] = None
             break
-
-    pdf = build_pdf(
-        body, position, company, company_description, company_mission, business_address_l1, business_address_l2, 
-        recipient_title, recipient_first_name, recipient_last_name, recipient_position)
-    save_pdf(pdf, company)
+    
+    print(data)
+    pdf = build_pdf(template, data)
+    save_pdf(pdf, data["company"])
     return 0
 
 if __name__ == "__main__":
