@@ -107,25 +107,30 @@ def build_pdf(template, data):
     pdf.cell(MARGIN)                                                                         
     pdf.multi_cell(TEXT_LENGTH, SPACING, template.p1(data))
 
-    pdf.cell(0, SPACING, "", ln=True)
-    pdf.cell(MARGIN)
-    pdf.multi_cell(TEXT_LENGTH, SPACING, template.p2(data))
+    if template.p2(data):
+        pdf.cell(0, SPACING, "", ln=True)
+        pdf.cell(MARGIN)
+        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p2(data))
 
-    pdf.cell(0, SPACING, "", ln=True)
-    pdf.cell(MARGIN)
-    pdf.multi_cell(TEXT_LENGTH, SPACING, template.p3(data))
+    if template.p3(data):
+        pdf.cell(0, SPACING, "", ln=True)
+        pdf.cell(MARGIN)
+        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p3(data))
 
-    pdf.cell(0, SPACING, "", ln=True)
-    pdf.cell(MARGIN)
-    pdf.multi_cell(TEXT_LENGTH, SPACING, template.p4(data))
+    if template.p4(data):
+        pdf.cell(0, SPACING, "", ln=True)
+        pdf.cell(MARGIN)
+        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p4(data))
     
-    pdf.cell(0, SPACING, "", ln=True)
-    pdf.cell(MARGIN)
-    pdf.multi_cell(TEXT_LENGTH, SPACING, template.p5(data))
+    if template.p5(data):
+        pdf.cell(0, SPACING, "", ln=True)
+        pdf.cell(MARGIN)
+        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p5(data))
 
-    pdf.cell(0, SPACING, "", ln=True)
-    pdf.cell(MARGIN)
-    pdf.multi_cell(TEXT_LENGTH, SPACING, template.p6(data))
+    if template.p6(data):
+        pdf.cell(0, SPACING, "", ln=True)
+        pdf.cell(MARGIN)
+        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p6(data))
 
     #------------------------------------------------------------------------------------------
     #Sign
@@ -160,6 +165,7 @@ def save_pdf(pdf, filename):
 def main():
     data = {}
     os.system('cls' if os.name == 'nt' else 'clear')
+
     data["company"] = input("Company Name:  ").strip().title()
     data["company_description"] = \
         input("Company Description: e.g. (A leader of cloud storage in Australia):  ").strip()
@@ -169,12 +175,15 @@ def main():
     data["business_address_l2"] = input("Business Address, Line 2:  ").strip().title()
     data["position"] = input("Job Position:  ").strip().title()
     while True:
-        data["field"] = input("Industry Field (data, dev):  ").strip().lower()
+        data["field"] = input("Industry Field (data, dev, sci):  ").strip().lower()
         if data["field"] == "data":
-            template = DataScience()
+            template = Data()
             break
         if data["field"] == "dev":
             template = SoftwareDev()
+            break
+        if data["field"] == "sci":
+            template = DataScientist()
             break
     while True:
         recipient_exists = input("Add Recipient? (y)=YES, (n)=NO:  ").strip().lower()
@@ -196,6 +205,7 @@ def main():
     filename = f"""{FIRST_NAME.title()} {LAST_NAME.title()} - {data["position"]} - Cover Letter.pdf"""
     pdf = build_pdf(template, data)
     save_pdf(pdf, filename)
+
     os.system('cls' if os.name == 'nt' else 'clear')
     print(f"""PDF Successfully created! "{filename}" can be found at: "{FILE_DESTINATION}".""")
     print("")
