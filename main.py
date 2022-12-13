@@ -175,17 +175,6 @@ def main():
     data["business_address_l2"] = input("Business Address, Line 2:  ").strip().title()
     data["position"] = input("Job Position:  ").strip().title()
     while True:
-        data["field"] = input("Industry Field (data, dev, sci):  ").strip().lower()
-        if data["field"] == "data":
-            template = Data()
-            break
-        if data["field"] == "dev":
-            template = SoftwareDev()
-            break
-        if data["field"] == "sci":
-            template = DataScientist()
-            break
-    while True:
         recipient_exists = input("Add Recipient? (y)=YES, (n)=NO:  ").strip().lower()
         if recipient_exists == "y":
             while True:
@@ -200,6 +189,17 @@ def main():
         if recipient_exists == "n":
             data["recipient_title"] = data["recipient_first_name"] \
                 = data["recipient_last_name"] = data["recipient_position"] = None
+            break
+    while True:
+        data["field"] = input("Industry Field (data, dev, sci):  ").strip().lower()
+        if data["field"] == "data":
+            template = Data(data)
+            break
+        if data["field"] == "dev":
+            template = SoftwareDev(data)
+            break
+        if data["field"] == "sci":
+            template = DataScientist(data)
             break
     
     filename = f"""{FIRST_NAME.title()} {LAST_NAME.title()} - {data["position"]} - Cover Letter.pdf"""
