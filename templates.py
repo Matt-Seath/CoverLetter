@@ -10,7 +10,7 @@ class DefaultFields():
     
 
     def p1(self): 
-        return f"""It is with enthusiasm I am writing to apply for the {self.job} position. \
+        return f"""It is with enthusiasm that I am writing to apply for the {self.job} position. \
 I'm passionate about {self.field} and I am delighted by the opportunity to apply my \
 knowledge and further hone skills at {self.company}, {self.desc}."""
 
@@ -31,7 +31,7 @@ projects at once while staying focused. I can follow orders and work well in a t
 ability to work alone and still meet tight deadlines."""
 
     def p6(self):
-        return f"""Thank you for your time and consideration. It would be an honor to join your team at {self.company} \
+        return f"""Thank you for your time and consideration. I'd love to join your team at {self.company} \
 and use my skills to advance the company's mission to {self.mission}. I look forward to hearing from you in \
 regards to my application."""
 
@@ -57,21 +57,35 @@ a fast and efficient manner."""
 class DataEntry(DefaultFields):
     field = "data"
 
+    def p1(self): 
+        return f"""It is with enthusiasm I am writing to apply for the {self.job} position. \
+I believe my administrative experience and skillset makes me a great fit for this role and I am delighted by the opportunity to apply my \
+knowledge and further hone skills at {self.company}, {self.desc}."""
+
+    def p2(self):
+        return f"""It is my goal to secure a position within a well-established {self.genre} such as yours where I \
+can build my career and become a valuable member of your team. I am currently studying a bachelor’s degree \
+in data science part-time at QUT while assisting management with administrative tasks at Ampol, where my fast \
+typing speed and technical skills surrounding information systems has increased workflow productivity by over 30%."""
+
     def p3(self):
-        return f"""I am well suited for this position as I am a detail-oriented team player with excellent written, communication and \
-impersonal skills. My experience in retail also enabled me to excel in fast-paced environments \
-with minimal supervision. In addition to my studies, I have several years of experience in entering data \
+        return f"""I am a detail-oriented team player with excellent written, communication and \
+interpersonal skills. My experience in retail and warehousing enabled me to excel working with deadlines \
+in fast-paced environments with minimal supervision. In addition to my studies, I have several years of experience in entering data \
 from multiple sources, and I take pride in my accuracy and speed in transcribing and transferring \
-data into relevant data repositories. I am used to working with various types of source data for \
-data entry purposes, and I also am very experienced with multitasking for other office duties as \
-needed."""
+data into relevant data repositories."""
 
     def p4(self):
-        return None
+        return f"""I am proficient working with Microsoft Excel, SQL databases \
+and other information systems. I am also capable of multitasking for other office duties as \
+needed, all while upholding a high standard of professionalism and discretion that is necessary when working with company data."""
 
     def p5(self):
         return None
 
+    def p6(self):
+        return f"""Thank you for your time and consideration. I believe this opening is a great opportunity for me to excel and \
+utilize my skills that advance {self.company}'s mission to {self.mission}. I look forward to hearing from you."""
 
 #-----------------------------------------------------------------------------------------------------------------------------------
 
