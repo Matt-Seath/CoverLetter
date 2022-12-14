@@ -105,32 +105,32 @@ def build_pdf(template, data):
     # Body
 
     pdf.cell(MARGIN)                                                                         
-    pdf.multi_cell(TEXT_LENGTH, SPACING, template.p1(data))
+    pdf.multi_cell(TEXT_LENGTH, SPACING, template.p1())
 
-    if template.p2(data):
+    if template.p2():
         pdf.cell(0, SPACING, "", ln=True)
         pdf.cell(MARGIN)
-        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p2(data))
+        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p2())
 
-    if template.p3(data):
+    if template.p3():
         pdf.cell(0, SPACING, "", ln=True)
         pdf.cell(MARGIN)
-        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p3(data))
+        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p3())
 
-    if template.p4(data):
+    if template.p4():
         pdf.cell(0, SPACING, "", ln=True)
         pdf.cell(MARGIN)
-        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p4(data))
+        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p4())
     
-    if template.p5(data):
+    if template.p5():
         pdf.cell(0, SPACING, "", ln=True)
         pdf.cell(MARGIN)
-        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p5(data))
+        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p5())
 
-    if template.p6(data):
+    if template.p6():
         pdf.cell(0, SPACING, "", ln=True)
         pdf.cell(MARGIN)
-        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p6(data))
+        pdf.multi_cell(TEXT_LENGTH, SPACING, template.p6())
 
     #------------------------------------------------------------------------------------------
     #Sign
@@ -167,6 +167,7 @@ def main():
     os.system('cls' if os.name == 'nt' else 'clear')
 
     data["company"] = input("Company Name:  ").strip().title()
+    data["company_genre"] = input("Company Genre: e.g (recruitment agency):  ").strip()
     data["company_description"] = \
         input("Company Description: e.g. (A leader of cloud storage in Australia):  ").strip()
     data["company_mission"] = \
@@ -193,7 +194,7 @@ def main():
     while True:
         data["field"] = input("Industry Field (data, dev, sci):  ").strip().lower()
         if data["field"] == "data":
-            template = Data(data)
+            template = DataEntry(data)
             break
         if data["field"] == "dev":
             template = SoftwareDev(data)
@@ -202,7 +203,7 @@ def main():
             template = DataScientist(data)
             break
     
-    filename = f"""{FIRST_NAME.title()} {LAST_NAME.title()} - {data["position"]} - Cover Letter.pdf"""
+    filename = f"""{FIRST_NAME.title()} {LAST_NAME.title()} - Cover Letter - {data["company"]}.pdf"""
     pdf = build_pdf(template, data)
     save_pdf(pdf, filename)
 
