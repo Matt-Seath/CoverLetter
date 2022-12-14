@@ -63,10 +63,7 @@ I believe my administrative experience and skillset makes me a great fit for thi
 knowledge and further hone skills at {self.company}, {self.desc}."""
 
     def p2(self):
-        return f"""It is my goal to secure a position within a well-established {self.genre} such as yours where I \
-can build my career and become a valuable member of your team. I am currently studying a bachelor’s degree \
-in data science part-time at QUT while assisting management with administrative tasks at Ampol, where my fast \
-typing speed and technical skills surrounding information systems has increased workflow productivity by over 30%."""
+        return None
 
     def p3(self):
         return f"""I am a detail-oriented team player with excellent written, communication and \
@@ -81,7 +78,10 @@ and other information systems. I am also capable of multitasking for other offic
 needed, all while upholding a high standard of professionalism and discretion that is necessary when working with company data."""
 
     def p5(self):
-        return None
+        return f"""It is my goal to secure a position within a well-established {self.genre} such as yours where I \
+can build my career and become a valuable member of your team. I am currently studying a bachelor’s degree \
+in data science part-time at QUT while assisting management with administrative tasks at Ampol, where my fast \
+typing speed and technical skills surrounding information systems has increased workflow productivity by over 30%."""
 
     def p6(self):
         return f"""Thank you for your time and consideration. I believe this opening is a great opportunity for me to excel and \
