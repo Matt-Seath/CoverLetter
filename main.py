@@ -3,9 +3,10 @@ import shutil
 from datetime import datetime
 from fpdf import FPDF
 from dotenv import dotenv_values
+from pathlib import Path
 
 from templates import *
-
+ 
 
 # Get Personal Data from .env file in root directory
 USER_DATA = dotenv_values(".env")
@@ -33,8 +34,8 @@ ADDRESS_LINE_2 = USER_DATA["ADDRESS_L2"]
 POSTCODE = USER_DATA["POSTCODE"]
 DOB = USER_DATA["DOB"]
 
-PATH_TO_PROJECT = USER_DATA["PATH_TO_PROJECT"]
-FILE_DESTINATION = USER_DATA["FILE_DESTINATION"]
+PATH_TO_PROJECT = str(Path(__file__).resolve().parent) + "/"
+FILE_DESTINATION = PATH_TO_PROJECT + "CoverLetters/"
 
 
 def build_pdf(template, data):
